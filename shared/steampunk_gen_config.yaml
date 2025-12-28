@@ -1,0 +1,284 @@
+generator:
+  name: "steampunk"
+  version: "1.0.0"
+  deterministic: true
+  chunking:
+    scope_type: "country"
+    id_template: "country:{country_id}"
+
+random:
+  default_seed: 0
+  streams:
+    topology: "topo"
+    style: "style"
+    population: "pop"
+    factions: "factions"
+    placement: "place"
+    relations: "rels"
+
+world_params:
+  countries: 2
+  cities_total: 5
+  city_size_range: [800, 6000]
+  building_count_target: 200
+  npc_count_target: 2000
+  district_per_city_range: [3, 7]
+  floors_per_building_range: [1, 6]
+  rooms_per_floor_range: [2, 12]
+  city_density_levels: ["low", "medium", "high"]
+  name_pools:
+    countries: ["Brassaria", "Vaporia", "Aetheria", "Cogsworth"]
+    cities: ["Aetherford", "Brasshaven", "Steamwich", "Gearwich", "Cinderport", "Fogchester"]
+    districts: ["Gearsward", "Cinder Row", "Aether Quay", "Ivory Heights", "Sootmarket"]
+    surnames: ["Copperfield", "Blackwell", "Cogburn", "Rivet", "Hawksmoor"]
+    given_names: ["Ada", "Edwin", "Beatrice", "Jules", "Nell", "Barnaby", "Octavia"]
+
+levels:
+  - id: world
+  - id: country
+  - id: city
+  - id: district
+  - id: building
+  - id: floor
+  - id: room
+  - id: npc
+  - id: faction
+
+styles:
+  technologies: ["steam", "clockwork", "aetheric"]
+  materials: ["brass", "copper", "cast_iron", "oak", "glass"]
+  pollution_levels: ["low", "medium", "high", "toxic"]
+  district_archetypes:
+    - id: industrial
+      tags: ["factory", "smokestacks"]
+      pollution_bias: "high"
+      wealth_bias: "low"
+    - id: docks
+      tags: ["port", "warehouse"]
+      pollution_bias: "medium"
+      wealth_bias: "low"
+    - id: university
+      tags: ["academy", "library"]
+      pollution_bias: "low"
+      wealth_bias: "medium"
+    - id: noble
+      tags: ["manor", "garden"]
+      pollution_bias: "low"
+      wealth_bias: "high"
+    - id: market
+      tags: ["shops", "guildhall"]
+      pollution_bias: "medium"
+      wealth_bias: "medium"
+
+industries:
+  - id: mining
+    required_buildings: ["mine", "smeltery"]
+  - id: shipyard
+    required_buildings: ["dock", "shipyard", "warehouse"]
+  - id: manufacturing
+    required_buildings: ["factory", "workshop", "warehouse"]
+  - id: academia
+    required_buildings: ["university", "laboratory", "archives"]
+
+buildings:
+  - id: mine
+    base_capacity: 60
+    tags: ["mine", "extractive"]
+    preferred_districts: ["industrial"]
+  - id: smeltery
+    base_capacity: 40
+    tags: ["smelter", "factory"]
+    preferred_districts: ["industrial"]
+  - id: factory
+    base_capacity: 120
+    tags: ["factory"]
+    preferred_districts: ["industrial", "market"]
+  - id: workshop
+    base_capacity: 30
+    tags: ["craft"]
+    preferred_districts: ["market", "industrial"]
+  - id: dock
+    base_capacity: 80
+    tags: ["port"]
+    preferred_districts: ["docks"]
+  - id: shipyard
+    base_capacity: 150
+    tags: ["port", "heavy"]
+    preferred_districts: ["docks"]
+  - id: warehouse
+    base_capacity: 50
+    tags: ["storage"]
+    preferred_districts: ["docks", "market", "industrial"]
+  - id: guard_post
+    base_capacity: 25
+    tags: ["security"]
+    preferred_districts: ["market", "industrial", "docks"]
+  - id: university
+    base_capacity: 200
+    tags: ["academy"]
+    preferred_districts: ["university", "noble"]
+  - id: laboratory
+    base_capacity: 40
+    tags: ["research"]
+    preferred_districts: ["university"]
+  - id: archives
+    base_capacity: 20
+    tags: ["library"]
+    preferred_districts: ["university"]
+  - id: manor
+    base_capacity: 40
+    tags: ["elite"]
+    preferred_districts: ["noble"]
+  - id: townhouse
+    base_capacity: 15
+    tags: ["residential"]
+    preferred_districts: ["market", "noble"]
+  - id: boarding_house
+    base_capacity: 60
+    tags: ["residential", "overflow"]
+    preferred_districts: ["industrial", "market"]
+  - id: market_hall
+    base_capacity: 80
+    tags: ["shops"]
+    preferred_districts: ["market"]
+
+profession_categories:
+  - id: workers
+  - id: engineers
+  - id: merchants
+  - id: guards
+  - id: elite
+  - id: scholars
+
+professions:
+  - id: miner
+    category: workers
+    weight: 1.0
+    requires_facility_tags: ["mine"]
+    allowed_building_tags: ["mine", "boarding_house", "townhouse"]
+    preferred_districts: ["industrial"]
+  - id: smelter
+    category: workers
+    weight: 0.6
+    requires_facility_tags: ["smelter", "factory"]
+    allowed_building_tags: ["smelter", "factory", "boarding_house"]
+    preferred_districts: ["industrial"]
+  - id: dock_worker
+    category: workers
+    weight: 0.8
+    requires_facility_tags: ["port"]
+    allowed_building_tags: ["dock", "warehouse", "boarding_house"]
+    preferred_districts: ["docks"]
+  - id: machinist
+    category: engineers
+    weight: 0.7
+    requires_facility_tags: ["factory", "workshop"]
+    allowed_building_tags: ["factory", "workshop", "townhouse"]
+    preferred_districts: ["industrial", "market"]
+  - id: inventor
+    category: engineers
+    weight: 0.3
+    requires_facility_tags: ["laboratory", "university"]
+    allowed_building_tags: ["laboratory", "university", "townhouse"]
+    preferred_districts: ["university"]
+  - id: shopkeeper
+    category: merchants
+    weight: 0.9
+    requires_facility_tags: ["shops"]
+    allowed_building_tags: ["market_hall", "warehouse", "townhouse"]
+    preferred_districts: ["market"]
+  - id: guard
+    category: guards
+    weight: 0.6
+    requires_facility_tags: ["security"]
+    allowed_building_tags: ["guard_post", "boarding_house"]
+    preferred_districts: ["market", "industrial", "docks"]
+  - id: noble
+    category: elite
+    weight: 0.2
+    requires_facility_tags: ["elite"]
+    allowed_building_tags: ["manor", "townhouse"]
+    preferred_districts: ["noble"]
+  - id: scholar
+    category: scholars
+    weight: 0.5
+    requires_facility_tags: ["academy", "library"]
+    allowed_building_tags: ["university", "archives", "laboratory", "townhouse"]
+    preferred_districts: ["university"]
+
+factions:
+  - id: guild_of_engineers
+    ideology: "progress"
+    influence:
+      country: { base: 0.4 }
+      city: { industrial: 0.6, university: 0.5, market: 0.3 }
+      district_tags: { factory: 0.7, academy: 0.4 }
+    admits_categories: ["engineers", "scholars"]
+  - id: order_of_cog
+    ideology: "order"
+    influence:
+      country: { base: 0.3 }
+      city: { market: 0.4, industrial: 0.5 }
+      district_tags: { security: 0.8 }
+    admits_categories: ["guards", "engineers"]
+  - id: brass_aristocracy
+    ideology: "status_quo"
+    influence:
+      country: { base: 0.2 }
+      city: { noble: 0.8 }
+      district_tags: { elite: 0.9 }
+    admits_categories: ["elite"]
+  - id: aether_scholarium
+    ideology: "knowledge"
+    influence:
+      country: { base: 0.25 }
+      city: { university: 0.8 }
+      district_tags: { academy: 0.9, library: 0.9 }
+    admits_categories: ["scholars", "engineers"]
+
+faction_relations:
+  guild_of_engineers:
+    order_of_cog: 0.2
+    brass_aristocracy: 0.1
+    aether_scholarium: 0.5
+  order_of_cog:
+    brass_aristocracy: 0.4
+    aether_scholarium: -0.2
+  brass_aristocracy:
+    aether_scholarium: 0.0
+
+ratios:
+  - key: ["manufacturing", "low"]
+    categories: { workers: 0.55, engineers: 0.10, merchants: 0.12, guards: 0.11, elite: 0.02, scholars: 0.10 }
+  - key: ["manufacturing", "medium"]
+    categories: { workers: 0.45, engineers: 0.15, merchants: 0.15, guards: 0.10, elite: 0.05, scholars: 0.10 }
+  - key: ["academia", "medium"]
+    categories: { workers: 0.25, engineers: 0.15, merchants: 0.18, guards: 0.10, elite: 0.05, scholars: 0.27 }
+  - key: ["shipyard", "low"]
+    categories: { workers: 0.50, engineers: 0.12, merchants: 0.12, guards: 0.14, elite: 0.02, scholars: 0.10 }
+  - key: ["noble", "high"]
+    categories: { workers: 0.20, engineers: 0.10, merchants: 0.18, guards: 0.15, elite: 0.25, scholars: 0.12 }
+
+placement_rules:
+  capacity_overrides:
+    boarding_house: { max_occupants: 80 }
+  diversity:
+    max_same_profession_pct_per_district: 0.35
+  proximity_bias:
+    guard_near_guard_post: 0.8
+    workers_near_factory: 0.7
+    elite_in_noble: 0.9
+    scholars_in_university: 0.9
+  exceptions:
+    allow_workers_in_townhouse_if_no_overflow: true
+  failsafe:
+    overflow_building: "boarding_house"
+    create_overflow_if_missing: true
+    max_iterations: 5
+
+validation_rules:
+  require_profession_facility: true
+  require_faction_zonal_influence: true
+  enforce_building_capacity: true
+  enforce_city_population_target_tolerance: 0.1
+  enforce_diversity_per_district: true

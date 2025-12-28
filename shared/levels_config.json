@@ -1,0 +1,13 @@
+{
+  "levels": [
+    { "id": "world" },
+    { "id": "country" },
+    { "id": "city" },
+    { "id": "district" },
+    { "id": "building" },
+    { "id": "floor" },
+    { "id": "room" },
+    { "id": "npc" },
+    { "id": "faction" }
+  ]
+}
