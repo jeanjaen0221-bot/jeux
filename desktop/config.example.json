@@ -1,0 +1,11 @@
+{
+  "api": {
+    "base_url": "http://127.0.0.1:8000",
+    "api_key": "dev-secret"
+  },
+  "generator": {
+    "seed": 1234,
+    "scope_type": "country",
+    "scope_node_id": null
+  }
+}
